@@ -23,6 +23,48 @@ isolation
 Durability
 - WAL is witten to the disk when the commit happens
 
+normalization: 
+- splitting data into multiple tables to avoid duplication and maintain consistency
+- achieved using 1NF , 2NF , 3NF normalisation
+
+denormalisation:
+- having all the rows in the same table and in the duplicated form for faster reads , as there is no joins that is required
+
+
+Normalisation:
+-1NF: the individual  column data should be atomic
+-2NF: the non key column should depend on the primary key of the table only
+-3NF: there should be no transitive dependency in the table
+
+
+Distributed nature
+- is given by tools such as citus , having master-slave application (having multiple read copies) , Vitess tool used by youtube ,
+- google spanner is a custom distributed db
+- to maintain consistency , distributed system uses consensus protocol (write goes to the leader ,and then to replicas if majority acknowledge the the write is commited)
+
+
+Isolation Levels:
+1. read uncommited (not used in prod)
+2. read commited : read the row value only when the transaction is commited
+3. repeatable read : it always see the same value during its entire lifetime (prevent dirty reads)
+4. serializable: synchronous in nature , transactions are executed one after the other (performance heavy)
+
+MVCC (multi version concurrency control mechanism):
+- postgress sql supports concurrent read and writes using MVCC
+- it works by maintaining multiple versions of the same row during a read or write opertion
+- it maintains a snapshot of the version before the transaction was started (the snapshot contain row version with xmin and xmax)
+- a transaction t1 sees a row version only when
+    a) the xmin value is commited and is less
+    b) the xmax value is null or from a commited transaction
+- when a transaction  tries to update a row it creates a new row version with xmin (ex: xmin  = 23) and xmax(ex:NULL) value and updated the xmax of the older row version to current tid
+- the previous transaction if only has read operation than nothing happens it will just return the old stale data
+- but if write operation happens then it depends on the isolation levels what needs to be done
+    a) read commited: it will fetch the updated row version and then update
+    b) in non- repeatable read or serilizable: it will give conucrrency error stating the row was changed 
+
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------
 
 NOSQL
 - flexible , can scale in a distributed system (social media app , logging ,messaging application )
@@ -32,3 +74,11 @@ NOSQL
 3. eventual consistency: all replicas converge to the same state but not instantly
 
 - it is distributed in nature and hence having consistency in which each node is update to date is complex to manage
+
+- normalisation is achieved  using referencing
+- de normalisation is achieved  using embeding 
+
+
+
+
+
