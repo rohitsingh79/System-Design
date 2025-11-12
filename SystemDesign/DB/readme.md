@@ -60,8 +60,24 @@ MVCC (multi version concurrency control mechanism):
 - the previous transaction if only has read operation than nothing happens it will just return the old stale data
 - but if write operation happens then it depends on the isolation levels what needs to be done
     a) read commited: it will fetch the updated row version and then update
-    b) in non- repeatable read or serilizable: it will give conucrrency error stating the row was changed 
+    b) in non-repeatable read or serializable: it will give concurrency error stating the row was changed 
 
+
+Indexing
+- faster for reads (select , group by , joins) and slow for writes
+- mongo db does default indexing on the _id by default  , custom indexing using create_index()
+
+Joins
+- inner join
+- left outer join
+- right outer join
+- self join
+- full outer join
+
+Keys
+- primary: uniquely identify each row
+- unique: used for unique values (ex: email) and can be null
+- foreign key : used for referential integrity  to link the the primary key of one with the secondary key in other table
 
 
 -----------------------------------------------------------------------------------------------------------------------------------------------
@@ -77,6 +93,13 @@ NOSQL
 
 - normalisation is achieved  using referencing
 - de normalisation is achieved  using embeding 
+- joins are done using embedding(de normalisation) 
+
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------
+ELASTIC SEARCH
+- for indexing it uses inverted index ('rohit' --> [#doc1 , #doc2 , #doc3]) 
 
 
 
